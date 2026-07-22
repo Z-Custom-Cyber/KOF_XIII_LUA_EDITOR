@@ -49,6 +49,7 @@ public:
     void memberInit();
     bool fileBackup();
     bool processFile(const std::string& filename, int isUnlock);
+    int deviceCode;
 };
 
 // 转码映射表
@@ -57,6 +58,7 @@ const unsigned char FileEncoder::codeMap[MAP_SIZE] = {
 };
 
 FileEncoder::FileEncoder() {
+    deviceCode = 0;
     memberInit();
     pathPrepare();
 }
@@ -108,8 +110,10 @@ bool FileEncoder::processFile(const std::string& filename, int operationType) {
     fin.close();
 
     // 执行转码操作
-    for (auto& byte : data) {
-        byte = transformByte(byte, codeMap);
+    if(deviceCode == DEVICE_PC){
+        for (auto& byte : data) {
+            byte = transformByte(byte, codeMap);
+        }
     }
 
     // 写入输出文件
